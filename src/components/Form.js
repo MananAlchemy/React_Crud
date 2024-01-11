@@ -1,13 +1,16 @@
+// Import necessary modules and components
 import React, { useState } from "react";
 import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
-// import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-// import { makeStyles } from "@mui/styles";
-import "./styles/form.css";
-// import { styled } from "@mui/system";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../styles/form.css";
+import { useNavigate } from "react-router-dom";
 
+// Component definition
 const Form = () => {
+  // const navigate = useNavigate();
   // State to manage the form data
   const [formData, setFormData] = useState({
     name: "",
@@ -85,10 +88,55 @@ const Form = () => {
       });
       return;
     }
+    // Retrieve data from localStorage and parse it as an array
+    let storedData = JSON.parse(localStorage.getItem("Data")) || [];
 
-    localStorage.setItem("Data", JSON.stringify(formData));
+    // Ensure storedData is always an array
+    if (!Array.isArray(storedData)) {
+      console.error("Data in localStorage is not an array:", storedData);
+      storedData = [];
+    }
+
+    // Push a new object into the array
+    storedData.push({
+      name: formData.name,
+      email: formData.email,
+      mobile: formData.mobile,
+      address: formData.address,
+      password: formData.password,
+      website: formData.website,
+    });
+
+    // Your custom logic for form submission
+    localStorage.setItem("Data", JSON.stringify(storedData));
+
+    // Display a success toast
+    toast.success("Form submitted successfully!", {
+      onClose: () => {
+        // Reset the form values after the toast is closed
+        setFormData({
+          name: "",
+          email: "",
+          mobile: "",
+          address: "",
+          password: "",
+          website: "",
+        });
+
+        // Reset the errors
+        setErrors({
+          name: false,
+          email: false,
+          mobile: false,
+          address: false,
+          password: false,
+          website: false,
+        });
+      },
+    });
   };
 
+  // Render the component
   return (
     <section className="main-section">
       <section className="form-section">
@@ -138,7 +186,6 @@ const Form = () => {
             helperText={errors.address ? "Address is required." : ""}
             onChange={(e) => handleInputChange(e, "address")}
           />
-
           <TextField
             error={errors.website}
             id="website"
@@ -165,4 +212,5 @@ const Form = () => {
   );
 };
 
+// Export the component
 export default Form;

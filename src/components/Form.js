@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 // Component definition
 const Form = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // State to manage the form data
   const [formData, setFormData] = useState({
     name: "",
@@ -109,6 +109,7 @@ const Form = () => {
 
     // Your custom logic for form submission
     localStorage.setItem("Data", JSON.stringify(storedData));
+    navigate("Table");
 
     // Display a success toast
     toast.success("Form submitted successfully!", {

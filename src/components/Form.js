@@ -58,8 +58,13 @@ const Form = () => {
       [type]:
         value.trim() === "" ||
         (type === "email" && !validateEmail(value)) ||
-        (type === "password" && !validatePassword(value)),
+        (type === "password" && !validatePassword(value)) ||
+        (type === "website" && !validateWebsite(value)),
     });
+  };
+  const validateWebsite = (value) => {
+    // Simple validation for a valid URL
+    return /^(ftp|http|https):\/\/[^ "]+$/.test(value);
   };
 
   // Event handler for form submission

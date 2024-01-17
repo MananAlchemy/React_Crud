@@ -135,7 +135,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, onDelete } = props;
+  const { numSelected, onDelete, onSearch } = props;
 
   return (
     <Toolbar
@@ -178,11 +178,14 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <React.Fragment>
+          <TextField
+            label="Search"
+            variant="standard"
+            onChange={(e) => onSearch(e.target.value)}
+          />
+          {/* ... */}
+        </React.Fragment>
       )}
     </Toolbar>
   );
@@ -191,6 +194,7 @@ function EnhancedTableToolbar(props) {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onSearch: PropTypes.func.isRequired,
 };
 
 const EnhancedTable = () => {
@@ -367,14 +371,10 @@ const EnhancedTable = () => {
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <TextField
-          label="Search"
-          variant="standard"
-          onChange={(e) => handleSearch(e.target.value)}
-        />
         <EnhancedTableToolbar
           numSelected={selected.length}
           onDelete={handleDelete}
+          onSearch={handleSearch}
         />
 
         <TableContainer>

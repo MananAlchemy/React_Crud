@@ -25,13 +25,22 @@ code {
 }
 
 .logo {
-  height: 4rem;
-  width: 4.5rem;
+  /* height: 4rem; */
+  /* width: 10px; */
   border-radius: 50px;
   /* padding: 10px; */
   align-items: center;
   display: flex;
   justify-content: center;
+}
+
+.icons {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  gap: 20px;
 }
 
 .Main-div {
@@ -58,4 +67,11 @@ code {
   align-items: center;
   text-align: center;
   justify-content: center;
+}
+
+.right-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 }

@@ -5,8 +5,8 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../styles/form.css";
 import { useNavigate } from "react-router-dom";
+import "../styles/form.css";
 
 // Component definition
 const Form = () => {
@@ -38,34 +38,18 @@ const Form = () => {
 
   // Validation function for password
   const validatePassword = (value) => {
-    const errors = [];
-
-    // Check for at least one lowercase letter
-    if (!/[a-z]/.test(value)) {
-      errors.push("Password should contain at least one lowercase letter.");
-    }
-
-    // Check for at least one uppercase letter
-    if (!/[A-Z]/.test(value)) {
-      errors.push("Password should contain at least one uppercase letter.");
-    }
-
-    // Check for at least one digit
-    if (!/\d/.test(value)) {
-      errors.push("Password should contain at least one digit.");
-    }
-
-    // Check for at least one special character
-    if (!/[!@#$%^&*]/.test(value)) {
-      errors.push("Password should contain at least one special character.");
-    }
+    const isValid =
+      /[a-z]/.test(value) &&
+      /[A-Z]/.test(value) &&
+      /\d/.test(value) &&
+      /[!@#$%^&*]/.test(value);
 
     setErrors({
       ...errors,
-      password: errors.length > 0 ? errors : false,
+      password: !isValid,
     });
 
-    return errors.length === 0;
+    return isValid;
   };
 
   // Event handler for input change
@@ -228,17 +212,15 @@ const Form = () => {
             onChange={(e) => handleInputChange(e, "website")}
           />
           <TextField
-            error={errors.password.length > 0}
+            error={errors.password}
             id="password"
             label="Password"
             type="password"
             value={formData.password}
             helperText={
-              errors.password.length > 0
-                ? errors.map((message, index) => (
-                    <div key={index}>{message}</div>
-                  ))
-                : ""
+              errors.password
+                ? "Invalid Password"
+                : "Password must contain an Uppercase Letter,an lowercase and an special character"
             }
             onChange={(e) => handleInputChange(e, "password")}
           />

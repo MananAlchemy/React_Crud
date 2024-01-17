@@ -25,6 +25,10 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import EditIcon from "@mui/icons-material/Edit";
 import { debounce } from "lodash";
+import Button from "@mui/material/Button";
+import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 export const visuallyHidden = {
   border: 0,
   clip: "rect(0 0 0 0)",
@@ -135,7 +139,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, onDelete, onSearch } = props;
+  const { numSelected, onDelete, onSearch, handleRedirect } = props;
 
   return (
     <Toolbar
@@ -184,7 +188,18 @@ function EnhancedTableToolbar(props) {
             variant="standard"
             onChange={(e) => onSearch(e.target.value)}
           />
-          {/* ... */}
+
+          <Button
+            variant="outlined"
+            sx={{
+              marginLeft: 2,
+              width: "250px", // Set your desired width
+              height: "60px", // Set your desired height
+            }}
+            onClick={handleRedirect}
+          >
+            Create User
+          </Button>
         </React.Fragment>
       )}
     </Toolbar>
@@ -195,6 +210,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onDelete: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
+  handleRedirect: PropTypes.func.isRequired,
 };
 
 const EnhancedTable = () => {
@@ -209,6 +225,17 @@ const EnhancedTable = () => {
   const [editMode, setEditMode] = React.useState(null);
   const [editedRow, setEditedRow] = React.useState({});
   const [searchTerm, setSearchTerm] = React.useState("");
+
+  const navigate = useNavigate();
+
+  const handleRedirect = () => {
+    try {
+      navigate("/");
+    } catch (error) {
+      // If an error occurs during redirection, log the error and redirect to home
+      console.error("Error during redirection:", error);
+    }
+  };
 
   const handleSearch = debounce((newSearchTerm) => {
     setPage(0); // Reset page when searching
@@ -375,6 +402,7 @@ const EnhancedTable = () => {
           numSelected={selected.length}
           onDelete={handleDelete}
           onSearch={handleSearch}
+          handleRedirect={handleRedirect}
         />
 
         <TableContainer>

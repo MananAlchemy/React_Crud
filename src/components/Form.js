@@ -38,8 +38,34 @@ const Form = () => {
 
   // Validation function for password
   const validatePassword = (value) => {
-    // Password should contain at least one special character and one uppercase letter
-    return /^(?=.*[!@#$%^&*])(?=.*[A-Z])/.test(value);
+    const errors = [];
+
+    // Check for at least one lowercase letter
+    if (!/[a-z]/.test(value)) {
+      errors.push("Password should contain at least one lowercase letter.");
+    }
+
+    // Check for at least one uppercase letter
+    if (!/[A-Z]/.test(value)) {
+      errors.push("Password should contain at least one uppercase letter.");
+    }
+
+    // Check for at least one digit
+    if (!/\d/.test(value)) {
+      errors.push("Password should contain at least one digit.");
+    }
+
+    // Check for at least one special character
+    if (!/[!@#$%^&*]/.test(value)) {
+      errors.push("Password should contain at least one special character.");
+    }
+
+    setErrors({
+      ...errors,
+      password: errors.length > 0 ? errors : false,
+    });
+
+    return errors.length === 0;
   };
 
   // Event handler for input change
@@ -62,6 +88,7 @@ const Form = () => {
         (type === "website" && !validateWebsite(value)),
     });
   };
+
   const validateWebsite = (value) => {
     // Simple validation for a valid URL
     return /^(ftp|http|https):\/\/[^ "]+$/.test(value);
@@ -201,12 +228,18 @@ const Form = () => {
             onChange={(e) => handleInputChange(e, "website")}
           />
           <TextField
-            error={errors.password}
+            error={errors.password.length > 0}
             id="password"
             label="Password"
             type="password"
             value={formData.password}
-            helperText={errors.password ? "Invalid password." : ""}
+            helperText={
+              errors.password.length > 0
+                ? errors.map((message, index) => (
+                    <div key={index}>{message}</div>
+                  ))
+                : ""
+            }
             onChange={(e) => handleInputChange(e, "password")}
           />
           <Button type="submit" variant="contained" color="primary">

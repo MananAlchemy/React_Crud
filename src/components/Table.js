@@ -24,7 +24,7 @@ import TextField from "@mui/material/TextField";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import EditIcon from "@mui/icons-material/Edit";
-
+import { debounce } from "lodash";
 export const visuallyHidden = {
   border: 0,
   clip: "rect(0 0 0 0)",
@@ -204,6 +204,12 @@ const EnhancedTable = () => {
   const [visibleRows, setVisibleRows] = React.useState([]);
   const [editMode, setEditMode] = React.useState(null);
   const [editedRow, setEditedRow] = React.useState({});
+  const [searchTerm, setSearchTerm] = React.useState("");
+
+  const handleSearch = debounce((newSearchTerm) => {
+    setPage(0); // Reset page when searching
+    setSearchTerm(newSearchTerm);
+  }, 300);
 
   const handleEdit = (id) => {
     setEditMode(id);
@@ -329,6 +335,7 @@ const EnhancedTable = () => {
       mobile: item.mobile,
       website: item.website,
     }));
+
     setRows(updatedRows);
     setVisibleRows(
       stableSort(updatedRows, getComparator(order, orderBy)).slice(
@@ -338,13 +345,38 @@ const EnhancedTable = () => {
     );
   }, [order, orderBy, page, rowsPerPage]);
 
+  React.useEffect(() => {
+    const filteredRows = rows.filter((row) => {
+      return (
+        row.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        row.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        row.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        row.mobile.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        row.website.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    });
+
+    const updatedVisibleRows = stableSort(
+      filteredRows,
+      getComparator(order, orderBy)
+    ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+    setVisibleRows(updatedVisibleRows);
+  }, [searchTerm, order, orderBy, page, rowsPerPage, rows]);
+
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
+        <TextField
+          label="Search"
+          variant="standard"
+          onChange={(e) => handleSearch(e.target.value)}
+        />
         <EnhancedTableToolbar
           numSelected={selected.length}
           onDelete={handleDelete}
         />
+
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}

@@ -6,8 +6,9 @@ import "react-toastify/dist/ReactToastify.css";
 // import Table from "./components/Table.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // import MananTable from "./components/Table.js";
-import EnhancedTable from "./components/Table.js";
-import Ui from "./components/Ui.js";
+// import EnhancedTable from "./components/Table.js";
+// import Ui from "./components/Ui.js";
+import DataTable from "./components/DataTable.js";
 
 function App() {
   return (
@@ -22,8 +23,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Form />} />
-          <Route path="Table" element={<EnhancedTable />} />
-          <Route path="UI" element={<Ui />} />
+          <Route path="Table" element={<DataTable />} />
+          {/* <Route path="UI" element={<Ui />} /> */}
         </Routes>
       </Router>
     </div>
